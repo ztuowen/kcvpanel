@@ -124,10 +124,10 @@
 
         Resource.update();
 
-        updateList('decks-list',window.rawsvd.port.api_deck_port,createRow);
+        updateList('#decks-list',window.rawsvd.port.api_deck_port,createRow);
 
-        updateList('kdock-list',window.rawsvd.kdock.filter(function(d){return d.api_state>-1;}),createRow);
-        updateList('ndock-list',window.rawsvd.ndock.filter(function(d){return d.api_state>-1;}),createRow);
+        updateList('#kdock-list',window.rawsvd.kdock.filter(function(d){return d.api_state>-1;}),createRow);
+        updateList('#ndock-list',window.rawsvd.ndock.filter(function(d){return d.api_state>-1;}),createRow);
     }
 
     function updateJSON(json)
