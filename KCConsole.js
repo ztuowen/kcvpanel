@@ -1,6 +1,9 @@
-/**
- * Created by joe on 2/5/15.
- */
+// This file consist of an excerpt copied from the Chromium project sample
+// with several modifications
+
+// Copyright (c) 2011 The Chromium Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
 
 function Console() {
 }
