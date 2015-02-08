@@ -1,0 +1,120 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script type="text/javascript" src="jquery-2.0.0.min.js"></script>
+    <script type="text/javascript" src="KCConsole.js"></script>
+    <script type="text/javascript" src="mytimer.js"></script>
+    <script type="text/javascript" src="KCViewerWrappers.js"></script>
+    <script type="text/javascript" src="KCViewerPanel.js"></script>
+    <link rel='stylesheet' href='KCViewerPanel.css'>
+</head>
+<body>
+<button class='reload-button'>Reload</button>
+Name:
+<label id="name">name</label>
+LV:
+<label id="lv">lv</label>
+<ul class='singleline' id='resources-list'>
+    <li>Reload to preprocess sources</li>
+</ul>
+<table>
+    <tr>
+        <td valign="top">
+            <h3 class='newspaper' align="bottom">Mission</h3>
+            <ol class='newspaper mission_timers'>
+                <li>Reload to preprocess sources</li>
+            </ol>
+        </td>
+        <td valign="top">
+            <h3 class='newspaper' align="bottom">Build</h3>
+            <ol class='newspaper build_timers'>
+                <li>Reload to preprocess sources</li>
+            </ol>
+        </td>
+        <td valign="top">
+            <h3 class='newspaper' align="bottom">Repair</h3>
+            <ol class='newspaper repair_timers'>
+                <li>Reload to preprocess sources</li>
+            </ol>
+        </td>
+    </tr>
+</table>
+
+<ul id="info-nav">
+    <li><a href="#decks-form">Decks</a></li>
+    <li><a href="#ships-form">Ships</a></li>
+    <li><a href="#docks-form">Docks</a></li>
+</ul>
+
+<div id="info">
+
+    <div id="decks-form">
+        <div class="exoptions">
+            <ul>
+            </ul>
+        </div>
+        <ol class='newspaper' id='decks-list'>
+            <li>Reload to preprocess sources</li>
+        </ol>
+    </div>
+
+    <div id="ships-form" >
+        <div class="exoptions">
+            <ul>
+                <li class="opspanel"><a href="#ships-cols">Columns</a></li>
+                <li class="opspanel"><a href="#ships-filt">Filters</a></li>
+            </ul>
+        </div>
+        <form id="ships-selector">
+
+            <div>
+                <div id="ships-cols" class="exoptionspanel"></div>
+                <div id="ships-filt" class="exoptionspanel">
+                <table>
+                    <tr>
+                        <td>
+                            <h4>Poppy lock:</h4>
+                            <label><input type="checkbox" name="locked" value="LOCK" checked>locked</label>
+                        </td>
+                        <td>
+                            <h4>Levels:</h4>
+                            <label class="txinput"><input type="text" name="lvmin" value="0"></label> -
+                            <label class="txinput"><input type="text" name="lvmax" value="0"></label>
+                        </td>
+                    </tr>
+                </table>
+                <h4>ShipType:</h4>
+                <div id="ships-type"></div></div>
+            </div>
+        </form>
+        <table class='newspaper sortable' style="width:100%">
+            <thead id='ships-head'>
+            <tr>
+            </tr>
+            </thead>
+            <tbody id='ships-list'>
+
+            </tbody>
+        </table>
+        <!--<ol class='newspaper ships'>-->
+        <!--<li>Reload to preprocess sources</li>-->
+        <!--</ol>-->
+    </div>
+
+    <div id="docks-form">
+        <div class="exoptions">
+            <ul>
+            </ul>
+        </div>
+        <ol class='newspaper' id='kdock-list'>
+            <li>Reload to preprocess sources</li>
+        </ol>
+        <ol class='newspaper' id='ndock-list'>
+            <li>Reload to preprocess sources</li>
+        </ol>
+    </div>
+</div>
+<p id="content">test field</p>
+
+</body>
+</html>
