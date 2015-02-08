@@ -186,6 +186,8 @@ table.sortable thead {
 }
 
 .exoptionspanel {
+    padding:10px;
+    border: 1px solid slateblue;
     position: fixed;
     bottom: 30px;
     background:lightblue;
