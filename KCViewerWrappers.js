@@ -4,28 +4,33 @@
  */
 
 function updateList(id,preprocessedFiles,func) {
-    var rowContainer = document.getElementById(id);
-    if (!rowContainer)
-        return;
-    rowContainer.innerHTML = '';
+    var rowContainer = $(id).empty();
 
-    preprocessedFiles.forEach(function (url) {
-        rowContainer.appendChild(func(url));
+    preprocessedFiles.forEach(function (item) {
+        $(rowContainer).append(func(item));
     });
 }
 
-function createRow(url) {
-    var li = document.createElement('li');
-    li.textContent = JSON.stringify(url);
-    return li;
+function createRow(obj) {
+    return $('<li>').text(JSON.stringify(obj));
 }
 
-function createCol(str)
+function filterById(id,elem)
 {
-    var col = document.createElement('td');
-    col.innerHTML=str;
-    return col;
+    return elem.api_id==id;
 }
+
+function findById(id,elems)
+{
+    return elems.filter(filterById.bind(null,id))[0];
+}
+
+Config = new function(){
+    this.Sort = {
+        name:"ID",
+        dir:1
+    };
+};
 
 Resource = new function(){
     this.field = ["石油","弹药","钢","铝","快速建造材","快速修复材","建造材料"];
@@ -37,7 +42,9 @@ Resource = new function(){
     }
 };
 
+
 Ship = new function(){
+    // Defining fields of ship and their description
     this.field = {
         ID:"ID",
         NAME:"名字",
@@ -58,34 +65,7 @@ Ship = new function(){
         LUCK:"幸运"
     };
 
-    function getRem(inp)
-    {
-        // todo affected by equipments?
-        if (inp[0]>=inp[1])
-            return inp[0]+"[M]";
-        return inp[0]+"["+(inp[1]-inp[0])+"]";
-    }
-
-    function healthBarGen(a,b)
-    {
-        const color=["red","orange","yellow","green"];
-        var col = color[Math.floor((a*4-1)/b)];
-        var txt = a+"/"+b;
-        var par = Math.floor(100*a/b);
-        var tmp = $('<div class="healthbar"></div>').append($('<div style="background: '+col+';width:' +par+'%"></div>').text(txt));
-        return tmp.get(0).outerHTML;
-    }
-
-    function filterById(id,elem)
-    {
-        return elem.api_id==id;
-    }
-
-    function findById(id,elems)
-    {
-        return elems.filter(filterById.bind(null,id))[0];
-    }
-
+    // Return a value for sorting and reuse purposes
     this.fieldVal = {
         ID:function(ship){return ship.api_id;},
         NAME:function(ship){return ship.api_ship_id;}, //name
@@ -106,11 +86,7 @@ Ship = new function(){
         LUCK:function(ship){return ship.api_lucky[0];} //lucky
     };
 
-    this.cmp = function(name,ord,a,b)
-    {
-        return ord*(Ship.fieldVal[name](a)-Ship.fieldVal[name](b));
-    };
-
+    // Return a value for outputing as an jQuery Element
     this.fieldS = {
         ID:function(ship){return ship.api_id;},
         NAME:function(ship){return findById(Ship.fieldVal.NAME(ship),window.mst.api_mst_ship).api_name;}, //name
@@ -131,6 +107,13 @@ Ship = new function(){
         LUCK:function(ship){return getRem(ship.api_lucky);} //lucky
     };
 
+    // Comparing ship a, b with field name name and order ord(+1/-1)
+    function cmpShip(name,ord,a,b)
+    {
+        return ord*(Ship.fieldVal[name](a)-Ship.fieldVal[name](b));
+    }
+
+    // Filters implemented if can support
     this.filter = {
         LOCK:function(args,ship){ return args == 0? true:(ship.api_locked>0);},
         LVRNG:function(args,ship){
@@ -141,6 +124,23 @@ Ship = new function(){
             return args.indexOf(Ship.fieldVal.STYPE(ship))>=0;}
     };
 
+    function getRem(inp)
+    {
+        // todo affected by equipments?
+        if (inp[0]>=inp[1])
+            return inp[0]+"[M]";
+        return inp[0]+"["+(inp[1]-inp[0])+"]";
+    }
+
+    function healthBarGen(a,b)
+    {
+        const color=["red","orange","yellow","green"];
+        var col = color[Math.floor((a*4-1)/b)];
+        var txt = a+"/"+b;
+        var par = Math.floor(100*a/b);
+        return $('<div class="healthbar"></div>').append($('<div style="background: '+col+';width:' +par+'%"></div>').text(txt));
+    }
+
     this.filterShipList = function(ships,filters)
     {
         for (var i=0;i<filters.length;++i)
@@ -150,9 +150,9 @@ Ship = new function(){
 
     this.createShipRow = function (cols,ship)
     {
-        var tr = document.createElement('tr');
+        var tr = $('<tr>');
         for (var i = 0;i<cols.length;++i)
-            tr.appendChild(createCol(Ship.fieldS[cols[i]](ship)));
+            tr.append($('<td>').append(Ship.fieldS[cols[i]](ship)));
         return tr;
     };
 
@@ -225,7 +225,7 @@ Ship = new function(){
         }
         $(th).empty().append(tr);
 
-        var sortf = Ship.cmp.bind(null,Config.Sort.name,Config.Sort.dir);
+        var sortf = cmpShip.bind(null,Config.Sort.name,Config.Sort.dir);
 
         // filtering
         //var ship=window.rawsvd.port.api_ship;
@@ -234,7 +234,7 @@ Ship = new function(){
             [Ship.filter.LOCK,lock],
             [Ship.filter.LVRNG,[lvmin,lvmax]]]);
         ship = ship.sort(sortf);
-        updateList('ships-list',ship,Ship.createShipRow.bind(null,cols));
+        updateList('#ships-list',ship,Ship.createShipRow.bind(null,cols));
     };
 };
 
@@ -285,13 +285,60 @@ Timer = new function(){
 };
 
 Deck = new function(){
-    function createDeckRow(args)
+    this.field = {
+        NAME:"名称",
+        MISS:"任务",
+        SHIP:"舰船信息"
+    };
+
+    this.fieldVal = {
+        NAME:function(deck){return deck.api_id;},
+        MISS:function(deck){return deck.api_mission[1];},
+        SHIP:function(deck){return 0;}
+    };
+    this.shipField=["NAME","STYPE","LV","EXP2","HP","COND"];
+    function genShipList(ships)
     {
+        var tmp = $('<table class="deckships">');
+        ships.forEach(function(id) {
+            if (id<0)
+                return;
+            var ship = findById(id,window.rawsvd.port.api_ship);
+            var row = $('<tr>');
+            Deck.shipField.forEach(function(field){
+                $(row).append($('<td>').append(Ship.fieldS[field](ship)));
+            });
+            $(tmp).append(row);
+        });
+        return tmp;
     }
-    this.updateDecks = function()
+    this.fieldS = {
+        NAME:function(deck){return deck.api_name;},
+        MISS:function(deck){return deck.api_mission[1]>0?'['+deck.api_mission[1]+']'+(new Date(deck.api_mission[2]).toLocaleTimeString()):"无";},
+        SHIP:function(deck){return genShipList(deck.api_ship);}
+    };
+
+    this.init = function()
     {
-        var list=$('#decks-list').empty();
-        var args;
-        list.append(createDeckRow(args));
+        var list=$('#decks-list').find(' thead').empty();
+        Object.getOwnPropertyNames(Deck.field).forEach(function(val){
+            list.append($('<th>').append(Deck.field[val]));
+        });
+    };
+    function createDeckRow(deck,args)
+    {
+        var tmp = $('<tr>');
+        Object.getOwnPropertyNames(Deck.field).forEach(function(val){
+            tmp.append($('<td>').append(Deck.fieldS[val](deck)));
+        });
+        return tmp;
     }
-}
+    this.update = function()
+    {
+        var list=$('#decks-list').find(' tbody').empty();
+        var args = 0;
+        window.rawsvd.port.api_deck_port.forEach(function(deck){
+            list.append(createDeckRow(deck,args));
+        });
+    };
+};
