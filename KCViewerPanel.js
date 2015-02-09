@@ -3,10 +3,6 @@
 (function () {
 
     //Container for configurations
-    Config={};
-    Config.Sort = {};
-    Config.Sort.name="ID";
-    Config.Sort.dir=1;
 
 	// Tabbing initialization
     function tabInit() {
@@ -76,6 +72,7 @@
     {
         Ship.init();
         Timer.init();
+        Deck.init();
     }
 
     // (re)loading user data
@@ -124,7 +121,7 @@
 
         Resource.update();
 
-        updateList('#decks-list',window.rawsvd.port.api_deck_port,createRow);
+        Deck.update();
 
         updateList('#kdock-list',window.rawsvd.kdock.filter(function(d){return d.api_state>-1;}),createRow);
         updateList('#ndock-list',window.rawsvd.ndock.filter(function(d){return d.api_state>-1;}),createRow);

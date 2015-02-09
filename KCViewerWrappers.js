@@ -15,6 +15,23 @@ function createRow(obj) {
     return $('<li>').text(JSON.stringify(obj));
 }
 
+function filterById(id,elem)
+{
+    return elem.api_id==id;
+}
+
+function findById(id,elems)
+{
+    return elems.filter(filterById.bind(null,id))[0];
+}
+
+Config = new function(){
+    this.Sort = {
+        name:"ID",
+        dir:1
+    };
+};
+
 Resource = new function(){
     this.field = ["石油","弹药","钢","铝","快速建造材","快速修复材","建造材料"];
     this.update = function() {
@@ -24,6 +41,7 @@ Resource = new function(){
         }
     }
 };
+
 
 Ship = new function(){
     // Defining fields of ship and their description
@@ -93,7 +111,7 @@ Ship = new function(){
     function cmpShip(name,ord,a,b)
     {
         return ord*(Ship.fieldVal[name](a)-Ship.fieldVal[name](b));
-    };
+    }
 
     // Filters implemented if can support
     this.filter = {
@@ -121,16 +139,6 @@ Ship = new function(){
         var txt = a+"/"+b;
         var par = Math.floor(100*a/b);
         return $('<div class="healthbar"></div>').append($('<div style="background: '+col+';width:' +par+'%"></div>').text(txt));
-    }
-
-    function filterById(id,elem)
-    {
-        return elem.api_id==id;
-    }
-
-    function findById(id,elems)
-    {
-        return elems.filter(filterById.bind(null,id))[0];
     }
 
     this.filterShipList = function(ships,filters)
@@ -277,13 +285,60 @@ Timer = new function(){
 };
 
 Deck = new function(){
-    function createDeckRow(args)
+    this.field = {
+        NAME:"名称",
+        MISS:"任务",
+        SHIP:"舰船信息"
+    };
+
+    this.fieldVal = {
+        NAME:function(deck){return deck.api_id;},
+        MISS:function(deck){return deck.api_mission[1];},
+        SHIP:function(deck){return 0;}
+    };
+    this.shipField=["NAME","STYPE","LV","EXP2","HP","COND"];
+    function genShipList(ships)
     {
+        var tmp = $('<table class="deckships">');
+        ships.forEach(function(id) {
+            if (id<0)
+                return;
+            var ship = findById(id,window.rawsvd.port.api_ship);
+            var row = $('<tr>');
+            Deck.shipField.forEach(function(field){
+                $(row).append($('<td>').append(Ship.fieldS[field](ship)));
+            });
+            $(tmp).append(row);
+        });
+        return tmp;
     }
-    this.updateDecks = function()
+    this.fieldS = {
+        NAME:function(deck){return deck.api_name;},
+        MISS:function(deck){return deck.api_mission[1]>0?'['+deck.api_mission[1]+']'+(new Date(deck.api_mission[2]).toLocaleTimeString()):"无";},
+        SHIP:function(deck){return genShipList(deck.api_ship);}
+    };
+
+    this.init = function()
     {
-        var list=$('#decks-list').empty();
-        var args;
-        list.append(createDeckRow(args));
+        var list=$('#decks-list').find(' thead').empty();
+        Object.getOwnPropertyNames(Deck.field).forEach(function(val){
+            list.append($('<th>').append(Deck.field[val]));
+        });
+    };
+    function createDeckRow(deck,args)
+    {
+        var tmp = $('<tr>');
+        Object.getOwnPropertyNames(Deck.field).forEach(function(val){
+            tmp.append($('<td>').append(Deck.fieldS[val](deck)));
+        });
+        return tmp;
     }
-}
+    this.update = function()
+    {
+        var list=$('#decks-list').find(' tbody').empty();
+        var args = 0;
+        window.rawsvd.port.api_deck_port.forEach(function(deck){
+            list.append(createDeckRow(deck,args));
+        });
+    };
+};
