@@ -193,6 +193,7 @@ table.sortable thead {
     background:lightblue;
 }
 
-.deckships td{
+.deckships th,td{
     width: 70px;
+    text-align: center;
 }
