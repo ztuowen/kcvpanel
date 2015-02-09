@@ -59,7 +59,7 @@ Mission = new function(){
     };
     this.fieldS = {
         NAME:function(mission){return mission.api_name;},
-        AREA:function(mission){return MapArea.fieldS.NAME(findById(mission.api_maparea_id,window.mst.api_maparea_id));}
+        AREA:function(mission){return MapArea.fieldS.NAME(findById(mission.api_maparea_id,window.mst.api_mst_maparea));}
     };
 };
 
