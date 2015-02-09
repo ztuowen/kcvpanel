@@ -42,6 +42,26 @@ Resource = new function(){
     }
 };
 
+MapArea = new function(){
+    this.field = {
+        NAME:"name"
+    };
+    this.fieldS = {
+        NAME:function(mapA){return mapA.api_name;}
+    };
+};
+
+Mission = new function(){
+    this.field = {
+        NAME:"name",
+        AREA:"area",
+        LNAME:"longname"
+    };
+    this.fieldS = {
+        NAME:function(mission){return mission.api_name;},
+        AREA:function(mission){return MapArea.fieldS.NAME(findById(mission.api_maparea_id,window.mst.api_maparea_id));}
+    };
+};
 
 Ship = new function(){
     // Defining fields of ship and their description
@@ -312,18 +332,39 @@ Deck = new function(){
         });
         return tmp;
     }
+
+    function genMission(mission)
+    {
+        if (mission[1] == 0)
+            return "无";
+        var tmp=$('<ul style="padding: 0;list-style-type:none">');
+        var mis = findById(mission[1],window.mst.api_mst_mission);
+        $(tmp).append($('<li>').append(Mission.fieldS.AREA(mis)));
+        $(tmp).append($('<li>').append(Mission.fieldS.NAME(mis)));
+        $(tmp).append($('<li>').append(new Date(mission[2]).toLocaleTimeString()));
+        return tmp;
+    }
     this.fieldS = {
         NAME:function(deck){return deck.api_name;},
-        MISS:function(deck){return deck.api_mission[1]>0?'['+deck.api_mission[1]+']'+(new Date(deck.api_mission[2]).toLocaleTimeString()):"无";},
+        MISS:function(deck){return genMission(deck.api_mission);},
         SHIP:function(deck){return genShipList(deck.api_ship);}
     };
 
     this.init = function()
     {
         var list=$('#decks-list').find(' thead').empty();
+        var tmp=$('<tr>');
         Object.getOwnPropertyNames(Deck.field).forEach(function(val){
-            list.append($('<th>').append(Deck.field[val]));
+            tmp.append($('<th>').append(Deck.field[val]));
         });
+        list.append(tmp);
+        $(list).find("th:not(:last-child)").attr("rowspan",2);
+        tmp=$('<table class="deckships">');
+        Deck.shipField.forEach(function(field){
+            $(tmp).append($('<th>').append(Ship.field[field]));
+        });
+        list.append(tmp);
+
     };
     function createDeckRow(deck,args)
     {
