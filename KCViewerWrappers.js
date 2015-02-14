@@ -59,7 +59,7 @@ Mission = new function(){
     };
     this.fieldS = {
         NAME:function(mission){return mission.api_name;},
-        AREA:function(mission){return MapArea.fieldS.NAME(findById(mission.api_maparea_id,window.mst.api_mst_maparea));}
+        AREA:function(mission){return MapArea.fieldS.NAME(window.mst.api_mst_maparea[mission.api_maparea_id]);}
     };
 };
 
@@ -90,10 +90,10 @@ Ship = new function(){
         ID:function(ship){return ship.api_id;},
         NAME:function(ship){return ship.api_ship_id;}, //name
         HP:function(ship){return ship.api_nowhp/ship.api_maxhp;}, //hp
-        STYPE:function(ship){return findById(Ship.fieldVal.NAME(ship),window.mst.api_mst_ship).api_stype;},
-        RARE:function(ship){return findById(Ship.fieldVal.NAME(ship),window.mst.api_mst_ship).api_backs;},
+        STYPE:function(ship){return window.mst.api_mst_ship[Ship.fieldVal.NAME(ship)].api_stype;},
+        RARE:function(ship){return window.mst.api_mst_ship[Ship.fieldVal.NAME(ship)].api_backs;},
         LV:function(ship){return ship.api_lv;}, //lv
-        AFTERLV:function(ship){return findById(Ship.fieldVal.NAME(ship),window.mst.api_mst_ship).api_afterlv;}, //hp
+        AFTERLV:function(ship){return window.mst.api_mst_ship[Ship.fieldVal.NAME(ship)].api_afterlv;}, //hp
         EXP2:function(ship){return ship.api_exp[1];}, //exp2nxt
         COND:function(ship){return ship.api_cond;}, //Cond
         KARY:function(ship){return ship.api_karyoku[0];}, //karyoku
@@ -109,9 +109,9 @@ Ship = new function(){
     // Return a value for outputing as an jQuery Element
     this.fieldS = {
         ID:function(ship){return ship.api_id;},
-        NAME:function(ship){return findById(Ship.fieldVal.NAME(ship),window.mst.api_mst_ship).api_name;}, //name
+        NAME:function(ship){return window.mst.api_mst_ship[Ship.fieldVal.NAME(ship)].api_name;}, //name
         HP:function(ship){ return healthBarGen(ship.api_nowhp,ship.api_maxhp);},//return ship.api_nowhp + "/" + ship.api_maxhp;}, //hp
-        STYPE:function(ship){return findById(Ship.fieldVal.STYPE(ship),window.mst.api_mst_stype).api_name;},
+        STYPE:function(ship){return window.mst.api_mst_stype[Ship.fieldVal.STYPE(ship)].api_name;},
         RARE:function(ship){return Ship.fieldVal.RARE(ship);},
         LV:function(ship){return ship.api_lv;}, //lv
         AFTERLV:function(ship){var lv=Ship.fieldVal.AFTERLV(ship); return lv==0?"-":lv;}, //lv
