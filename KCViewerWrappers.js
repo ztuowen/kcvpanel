@@ -145,7 +145,7 @@ Ship = new function(){
         DUP:function(args,ship){
             if (args==0)
                 return true;
-            var cnt;
+            var cnt=0;
             window.rawsvd.port.api_ship.forEach(function(val)
             {
                 if (Ship.fieldVal.NAME(val)==Ship.fieldVal.NAME(ship))
