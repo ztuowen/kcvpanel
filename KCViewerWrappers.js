@@ -141,7 +141,18 @@ Ship = new function(){
             if (args[1]>0 && ship.api_lv>args[1])return false;
             return true},
         STYPE:function(args,ship){
-            return args.indexOf(Ship.fieldVal.STYPE(ship))>=0;}
+            return args.indexOf(Ship.fieldVal.STYPE(ship))>=0;},
+        DUP:function(args,ship){
+            if (args==0)
+                return true;
+            var cnt;
+            window.rawsvd.port.api_ship.forEach(function(val)
+            {
+                if (Ship.fieldVal.NAME(val)==Ship.fieldVal.NAME(ship))
+                    ++cnt;
+            });
+            return cnt>1;
+        }
     };
 
     function getRem(inp)
@@ -205,6 +216,7 @@ Ship = new function(){
         var lock = 0;
         var lvmin = 0;
         var lvmax = 0;
+        var dup = 0;
         var shipsel = $("#ships-selector");
         shipsel.find("input[name=cols]:checkbox:checked").each(function() {
             cols.push($(this).val());
@@ -216,6 +228,10 @@ Ship = new function(){
 
         shipsel.find("input[name=locked]:checkbox:checked").each(function() {
             lock=1;
+        });
+
+        shipsel.find("input[name=dup]:checkbox:checked").each(function() {
+            dup=1;
         });
 
         shipsel.find("input[name=lvmin]").each(function() {
@@ -252,7 +268,8 @@ Ship = new function(){
         var ship = Ship.filterShipList(window.rawsvd.port.api_ship,[
             [Ship.filter.STYPE,stypes],
             [Ship.filter.LOCK,lock],
-            [Ship.filter.LVRNG,[lvmin,lvmax]]]);
+            [Ship.filter.LVRNG,[lvmin,lvmax]],
+            [Ship.filter.DUP,dup]]);
         ship = ship.sort(sortf);
         updateList('#ships-list',ship,Ship.createShipRow.bind(null,cols));
     };
