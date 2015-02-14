@@ -198,8 +198,25 @@ Ship = new function(){
             }
         );
 
+        shipsel = $('#ships-selector');
+        shipsel.find("button[name='select-all']").click(function(event){
+            event.preventDefault();
+            $("#ships-type input[name='stype']").each(function(){
+                this.checked=true;
+            });
+            Ship.update();
+        });
+
+        shipsel.find("button[name='select-none']").click(function(event){
+            event.preventDefault();
+            $("#ships-type input[name='stype']").each(function(){
+                this.checked=false;
+            });
+            Ship.update();
+        });
+
         // ship form init
-        $("#ships-selector").on('change',function(event) {
+        shipsel.on('change',function(event) {
             Ship.update();
         });
         var tmp = $("#ships-cols").empty();
