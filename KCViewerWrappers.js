@@ -191,12 +191,13 @@ Ship = new function(){
     {
         // update ship type names
         var shipsel = $("#ships-type");
-        window.mst.api_mst_stype.forEach(function(stype){
-                var item=$('<label></label>').append('<input type="checkbox" name="stype" value="'+stype.api_id+'" checked>')
-                    .append($("<div class='boxed'></div>").text(stype.api_name));
-                shipsel.append(item);
-            }
-        );
+        for (var i=0;i<window.mst.api_mst_stype.length;++i)
+        {  
+            var stype = window.mst.api_mst_stype[i];
+            var item=$('<label></label>').append('<input type="checkbox" name="stype" value="'+i+'" checked>')
+                .append($("<div class='boxed'></div>").text(stype.api_name));
+            shipsel.append(item);
+        }
 
         shipsel = $('#ships-selector');
         shipsel.find("button[name='select-all']").click(function(event){
