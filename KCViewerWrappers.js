@@ -37,8 +37,10 @@ Resource = new function(){
     this.update = function() {
         var list = $('#resources-list').empty();
         for (var i = 0;i<Resource.field.length;++i) {
-            $(list).append($('<li>').text(Resource.field[i]+":"+window.rawsvd.port.api_material[i].api_value));
+            list.append($('<li>').text(Resource.field[i]+":"+window.rawsvd.port.api_material[i].api_value));
         }
+        list.append($('<li>').text("船只"+":"+window.rawsvd.port.api_ship.length+"/100"))
+            .append($('<li>').text("物品"+":"+window.rawsvd.slot_item.length+"/500"))
     }
 };
 
@@ -460,4 +462,14 @@ Dock = new function(){
                 + new Date(item.api_complete_time).toLocaleTimeString()));
         });
     }
+};
+
+Item = new function(){
+    this.init =function(){
+
+    };
+
+    this.update = function(){
+        updateList('#item-list',window.rawsvd.slot_item,createRow);
+    };
 };

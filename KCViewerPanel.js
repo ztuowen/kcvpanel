@@ -124,7 +124,7 @@
 
         Dock.update();
 
-        updateList('#item-list',window.rawsvd.slot_item,createRow);
+        Item.update();
     }
 
     function updateJSON(json)
