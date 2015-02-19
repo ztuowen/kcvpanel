@@ -73,6 +73,7 @@
         Ship.init();
         Timer.init();
         Deck.init();
+        Dock.init();
     }
 
     // (re)loading user data
@@ -123,8 +124,8 @@
 
         Deck.update();
 
-        updateList('#kdock-list',window.rawsvd.kdock.filter(function(d){return d.api_state>-1;}),createRow);
-        updateList('#ndock-list',window.rawsvd.ndock.filter(function(d){return d.api_state>-1;}),createRow);
+        Dock.update();
+
         updateList('#item-list',window.rawsvd.slot_item,createRow);
     }
 
