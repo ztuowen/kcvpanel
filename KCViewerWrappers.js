@@ -421,6 +421,9 @@ Deck = new function(){
 
 Dock = new function(){
     this.init = function() {
+        $("#dock-conf").on('change',function(event) {
+            Dock.update();
+        });
     };
 
     function getName(id,shown)
