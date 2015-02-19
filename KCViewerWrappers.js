@@ -418,3 +418,46 @@ Deck = new function(){
         });
     };
 };
+
+Dock = new function(){
+    this.init = function() {
+        $("#dock-conf").on('change',function(event) {
+            Dock.update();
+        });
+    };
+
+    function getName(id,shown)
+    {
+        if (shown)
+        {
+            ship = findById(id,window.mst.api_mst_ship);
+            return ship.api_name;
+        }
+        return "???";
+    }
+
+    this.update = function(){
+        var shown = false;
+        var dock = $("#docks-form");
+
+        dock.find(".exoptions input[name=name]:checkbox:checked").each(function() {
+            shown = true;
+        });
+
+        var kdock = window.rawsvd.kdock.filter(function(d){return d.api_state>-1;});
+        dock = $('#kdock-list').empty();
+        kdock.forEach(function (item){
+            dock.append($('<li>')
+                .text(getName(item.api_created_ship_id,shown) + ":" + (item.api_state!=3?
+                    new Date(item.api_complete_time).toLocaleTimeString():"Completed")));
+        });
+
+        var ndock = window.rawsvd.ndock.filter(function(d){return d.api_state>0;});
+        dock = $('#ndock-list').empty();
+        ndock.forEach(function (item){
+            dock.append($('<li>')
+                .text(Ship.fieldS.NAME(findById(item.api_ship_id,window.rawsvd.port.api_ship)) + ":"
+                + new Date(item.api_complete_time).toLocaleTimeString()));
+        });
+    }
+};
