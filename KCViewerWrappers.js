@@ -449,17 +449,18 @@ Dock = new function(){
         var kdock = window.rawsvd.kdock.filter(function(d){return d.api_state>-1;});
         dock = $('#kdock-list').empty();
         kdock.forEach(function (item){
-            dock.append($('<li>')
-                .text(getName(item.api_created_ship_id,shown) + ":" + (item.api_state!=3?
-                    new Date(item.api_complete_time).toLocaleTimeString():"Completed")));
+            if (item.api_state>0)
+                dock.append($('<li>')
+                    .text(getName(item.api_created_ship_id,shown) + ":" + (item.api_complete_time<new Date().getTime()?
+                        new Date(item.api_complete_time).toLocaleTimeString():"Completed")));
         });
 
         var ndock = window.rawsvd.ndock.filter(function(d){return d.api_state>0;});
         dock = $('#ndock-list').empty();
         ndock.forEach(function (item){
             dock.append($('<li>')
-                .text(Ship.fieldS.NAME(findById(item.api_ship_id,window.rawsvd.port.api_ship)) + ":"
-                + new Date(item.api_complete_time).toLocaleTimeString()));
+                .text(Ship.fieldS.NAME(findById(item.api_ship_id,window.rawsvd.port.api_ship)) + ":" + (item.api_complete_time<new Date().getTime()?
+                + new Date(item.api_complete_time).toLocaleTimeString():"Completed")));
         });
     }
 };
