@@ -451,7 +451,8 @@ Dock = new function(){
         kdock.forEach(function (item){
             if (item.api_state>0)
                 dock.append($('<li>')
-                    .text(getName(item.api_created_ship_id,shown) + ":" + (item.api_complete_time<new Date().getTime()?
+                    .text(getName(item.api_created_ship_id,shown) + ":" + 
+                        (item.api_complete_time>new Date().getTime()?
                         new Date(item.api_complete_time).toLocaleTimeString():"Completed")));
         });
 
@@ -459,8 +460,9 @@ Dock = new function(){
         dock = $('#ndock-list').empty();
         ndock.forEach(function (item){
             dock.append($('<li>')
-                .text(Ship.fieldS.NAME(findById(item.api_ship_id,window.rawsvd.port.api_ship)) + ":" + (item.api_complete_time<new Date().getTime()?
-                + new Date(item.api_complete_time).toLocaleTimeString():"Completed")));
+                .text(Ship.fieldS.NAME(findById(item.api_ship_id,window.rawsvd.port.api_ship)) + ":" +
+                    (item.api_complete_time>new Date().getTime()?
+                    new Date(item.api_complete_time).toLocaleTimeString():"Completed")));
         });
     }
 };
