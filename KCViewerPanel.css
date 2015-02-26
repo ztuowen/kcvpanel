@@ -122,9 +122,9 @@ table.sortable thead {
     display: inline;
     background: #ccc;
     border: 1px solid #888;
-    border-bottom: 0;
-    margin-right: 2px;
-    padding: 3px;
+    border-bottom-style: none;
+    margin: 0 0 0 0.6em;
+    padding: 3px 0.5em 3px 0.5em;
 }
 
 #info-nav li a:hover {
@@ -133,8 +133,7 @@ table.sortable thead {
 
 #info-nav li.current {
     background: #fff;
-    padding-bottom: 4px;
-
+    border-bottom: 3px solid #fff;
 }
 
 .healthbar {
